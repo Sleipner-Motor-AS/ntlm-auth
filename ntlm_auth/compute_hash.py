@@ -7,6 +7,7 @@ import hmac
 import re
 
 from ntlm_auth.des import DES
+from ntlm_auth.md4 import hash_md4
 
 
 def _lmowfv1(password):
@@ -63,7 +64,8 @@ def _ntowfv1(password):
         nt_hash = binascii.unhexlify(password.split(':')[1])
         return nt_hash
 
-    digest = hashlib.new('md4', password.encode('utf-16-le')).digest()
+    #  digest = hashlib.new('md4', password.encode('utf-16-le')).digest()
+    digest = hash_md4(password.encode('utf-16-le'))
     return digest
 
 

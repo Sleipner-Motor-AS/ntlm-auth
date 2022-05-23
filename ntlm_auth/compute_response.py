@@ -13,9 +13,10 @@ import ntlm_auth.compute_hash as comphash
 import ntlm_auth.compute_keys as compkeys
 import ntlm_auth.messages
 
-from ntlm_auth.des import DES
 from ntlm_auth.constants import AvId, AvFlags, NegotiateFlags
+from ntlm_auth.des import DES
 from ntlm_auth.gss_channel_bindings import GssChannelBindingsStruct
+from ntlm_auth.md4 import hash_md4
 
 
 class ComputeResponse():
@@ -297,7 +298,8 @@ class ComputeResponse():
         ntlm_hash = comphash._ntowfv1(password)
         response = ComputeResponse._calc_resp(ntlm_hash, server_challenge)
 
-        session_base_key = hashlib.new('md4', ntlm_hash).digest()
+        # session_base_key = hashlib.new('md4', ntlm_hash).digest()
+        session_base_key = hash_md4(ntlm_hash)
 
         return response, session_base_key
 
@@ -328,7 +330,8 @@ class ComputeResponse():
         nt_session_hash = hashlib.md5(challenge).digest()[:8]
         response = ComputeResponse._calc_resp(ntlm_hash, nt_session_hash[0:8])
 
-        session_base_key = hashlib.new('md4', ntlm_hash).digest()
+        # session_base_key = hashlib.new('md4', ntlm_hash).digest()
+        session_base_key = hash_md4(ntlm_hash)
 
         return response, session_base_key
 
